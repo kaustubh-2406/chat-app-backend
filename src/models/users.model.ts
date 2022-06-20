@@ -4,15 +4,20 @@
 // for more of what you can do here.
 import { Application } from '../declarations';
 import { Model, Mongoose } from 'mongoose';
+import UserI from '../interfaces/UserI';
 
-export default function (app: Application): Model<any> {
+export default function (app: Application): Model<UserI> {
   const modelName = 'users';
   const mongooseClient: Mongoose = app.get('mongooseClient');
   const schema = new mongooseClient.Schema({
   
+    name: { type: String, required: true },
     email: { type: String, unique: true, lowercase: true },
-    password: { type: String },
-  
+    password: { type: String, required: true },
+    status: { type: String, default: '', required: true },
+    avatar: {type: String, default: ''},
+    // dm: { type: [{ type: Schema.Types.ObjectId, ref: 'dm' }] },
+    // groups: { type: [{ type: Schema.Types.ObjectId, ref: 'groups' }] },
   
   }, {
     timestamps: true
@@ -23,5 +28,5 @@ export default function (app: Application): Model<any> {
   if (mongooseClient.modelNames().includes(modelName)) {
     (mongooseClient as any).deleteModel(modelName);
   }
-  return mongooseClient.model<any>(modelName, schema);
+  return mongooseClient.model<UserI>(modelName, schema);
 }
