@@ -1,10 +1,10 @@
 - [x] create users model
 
-- [ ] create messages model
-  - [ ] message model
+- [x] create messages model
+  - [x] message model
   - [ ] image model
   - [ ] image upload service
-  - [ ] configure discriminator to change the info bw text and image
+  - [x] configure discriminator to change the info bw text and image
   
 - [ ] create dm (direct-messaging) model
 - [ ] create groups model
