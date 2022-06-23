@@ -4,6 +4,7 @@
 // for more of what you can do here.
 import { Application } from '../declarations';
 import { Model, Mongoose } from 'mongoose';
+import { ImageI, MessageI } from '../interfaces/MessageI';
 
 export default function (app: Application): {[key: string]: Model<any>} {
   const modelName = 'messages';
@@ -11,8 +12,6 @@ export default function (app: Application): {[key: string]: Model<any>} {
   const { Schema } = mongooseClient;
   mongooseClient.Promise = global.Promise;
   
-  const options = { discriminatorKey: 'type' };
-
   const BaseMessages = new Schema({
     sender: {
       type: Schema.Types.ObjectId,
@@ -21,8 +20,15 @@ export default function (app: Application): {[key: string]: Model<any>} {
     },
   }, { 
     timestamps: true,
-    ...options
+    discriminatorKey: 'type'
   });
+
+  // This is necessary to avoid model compilation errors in watch mode
+  // see https://mongoosejs.com/docs/api/connection.html#connection_Connection-deleteModel
+  if (mongooseClient.modelNames().includes(modelName)) {
+    (mongooseClient as any).deleteModel(modelName);
+  }
+
   const BaseModel = mongooseClient.model(modelName, BaseMessages);
 
   const MessagesSchema = new Schema({
@@ -33,15 +39,8 @@ export default function (app: Application): {[key: string]: Model<any>} {
     img: { type: String, required: true }
   });
 
-  const MessageModel = BaseModel.discriminator('message', MessagesSchema);
-  const ImageModel = BaseModel.discriminator('image', ImageSchema);
-
-  // I dont know whi this section breaks the code in this model 
-  // while others work absolutely fine with it.. 
-  // but if it work it should be the solution :)
-  // if (mongooseClient.modelNames().includes(modelName)) {
-  //   (mongooseClient as any).deleteModel(modelName);
-  // }
+  const MessageModel = BaseModel.discriminator<MessageI>('message', MessagesSchema);
+  const ImageModel = BaseModel.discriminator<ImageI>('image', ImageSchema);
 
   return {BaseModel, MessageModel, ImageModel};
 }
