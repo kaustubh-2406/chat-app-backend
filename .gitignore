@@ -110,3 +110,9 @@ $RECYCLE.BIN/
 # Others
 lib/
 data/
+
+# Ignore files updated to public
+# currently using uploads as directory.. planning to move it to /avatar and /images
+public/uploads
+public/avatar
+public/images
