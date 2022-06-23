@@ -13,13 +13,19 @@
 ## Image upload service  
 - [x] Basic implementation
 - [ ] save avatars to /public/avatars/:userId
+- [ ] save group icons to /public/groups/:groupId
 - [ ] save images  to /public/images/id
 
 ## DM service
 - [ ] create dm (direct-messaging) model
 
 ## Groups service
-- [ ] create groups model
+- [x] create groups model
+- [x] restricted updation and deletion to owner
+- [ ] GET request, populate members field with actual users..
+
+**Points to keep in mind**: 
+- only owners can add members, update group info and delete the group.
 
 ### FURTHER SCOPE
 - [ ] big files upload 
